@@ -4,16 +4,10 @@ import com.google.gson.Gson;
 import dto.request.CreateUserRequest;
 import dto.response.CreateAndLoginUserResponse;
 import io.restassured.response.Response;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import config.RequestConfig;
 import steps.CheckSteps;
 import steps.SendRequestStep;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class CreateUserTest {
 
@@ -24,6 +18,7 @@ public class CreateUserTest {
     private final CheckSteps checkSteps = new CheckSteps();
 
     @Test
+    @DisplayName("Проверка успешного создания пользователя")
     public void checkCreateUserTest() {
         CreateUserRequest newUserRequest = new CreateUserRequest("email@emqil.ru", "Qwerty123@", "Тестовый юзер");
         Response response = sendRequestStep.sendPostRequest(createUserUri, gson.toJson(newUserRequest));
@@ -34,6 +29,7 @@ public class CreateUserTest {
     }
 
     @Test
+    @DisplayName("Проверка ошибки при создании дубликата пользователя")
     public void checkCreateUserDublicateErrorTest() {
         CreateUserRequest newUserRequest = new CreateUserRequest("email@emqil.ru", "Qwerty123@", "Тестовый юзер");
         Response response = sendRequestStep.sendPostRequest(createUserUri, gson.toJson(newUserRequest));
@@ -50,6 +46,7 @@ public class CreateUserTest {
     }
 
     @Test
+    @DisplayName("Проверка ошибки при создании пользователя без одного из обязательных полей")
     public void checkCreateUserWithoutRequiredFieldErrorTest() {
         CreateUserRequest newUserRequest = new CreateUserRequest("email", "Qwerty123@", "");
         Response response = sendRequestStep.sendPostRequest(createUserUri, gson.toJson(newUserRequest));
