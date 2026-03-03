@@ -19,7 +19,7 @@ public class SendRequestStep {
                 .post(url);
     }
 
-    @Step("Отправить с методом POST запрос на {url}")
+    @Step("Отправить с методом POST запрос на {url} с авторизацией")
     public Response sendPostRequestWithAuthorization (String url, String body, String token) {
         return given()
                 .spec(RequestConfig.getRequestSpec())
@@ -35,6 +35,30 @@ public class SendRequestStep {
     @Step("Отправить запрос с методом DELETE на {url}")
     public Response sendDeleteRequest (String url, String token) {
         return given().spec(RequestConfig.getRequestSpec()).header("Authorization", token).delete(url);
+    }
+
+    @Step("Отправить с методом PATCH запрос на {url} с авторизацией")
+    public Response sendPatchRequestWithAuthorization (String url, String body, String token) {
+        return given()
+                .spec(RequestConfig.getRequestSpec())
+                .header("Content-type", "application/json")
+                .and()
+                .header("Authorization", token)
+                .and()
+                .body(body)
+                .when()
+                .patch(url);
+    }
+
+    @Step("Отправить с методом PATCH запрос на {url}")
+    public Response sendPatchRequest (String url, String body) {
+        return given()
+                .spec(RequestConfig.getRequestSpec())
+                .header("Content-type", "application/json")
+                .and()
+                .body(body)
+                .when()
+                .patch(url);
     }
 
 
