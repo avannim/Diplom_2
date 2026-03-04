@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import dto.request.CreateOrderRequest;
 import dto.request.CreateUserRequest;
 import dto.response.CreateAndLoginUserResponse;
-import dto.response.CreateOrderResponse;
 import enums.APIEndpoints;
 import enums.IngredientHash;
 import io.restassured.response.Response;
@@ -36,8 +35,6 @@ public class CreateOrderTest {
         CreateOrderRequest requestHash = new CreateOrderRequest(List.of(IngredientHash.SPICY_SAUCE.getIngredient(),IngredientHash.PROTOSTOMIA_MEAT.getIngredient(),IngredientHash.MINI_SALAD.getIngredient(),IngredientHash.FLUORECENT_BUN.getIngredient()));
         Response response = sendRequestStep.sendPostRequestWithAuthorization(APIEndpoints.ACTIONS_ORDER.getPath(), gson.toJson(requestHash), userResponse.getAccessToken());
         checkSteps.checkRequestStatus(response, 200);
-        System.out.println(response.body().asString());
-        CreateOrderResponse newOrder = gson.fromJson(response.body().asString(), CreateOrderResponse.class);
     }
 
     @Test
@@ -46,7 +43,6 @@ public class CreateOrderTest {
         checkSteps.checkRequestStatus(response, 200);
         CreateOrderRequest wrongHash = new CreateOrderRequest(List.of(IngredientHash.GREEK_SAUCE.getIngredient(),IngredientHash.MARCIAN_ALFASAHARID.getIngredient(),IngredientHash.MAGNOLIA_MEAT.getIngredient(),IngredientHash.CRATER_BUN.getIngredient()));
         response = sendRequestStep.sendPostRequest(APIEndpoints.ACTIONS_ORDER.getPath(), gson.toJson(wrongHash));
-        System.out.println(response.body().asString());
         checkSteps.checkRequestStatus(response, 403);
         checkSteps.checkRequestErrorMessage("jwt expired", response);
     }
