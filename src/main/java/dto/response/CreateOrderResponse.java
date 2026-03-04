@@ -1,14 +1,15 @@
 package dto.response;
 
+import model.Order;
 import lombok.*;
-import model.User;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class GetAndChangeUserInfoResponse {
+public class CreateOrderResponse {
 
+    private String name;
+    private Order order;
     private boolean success;
-    private User user;
 
 }

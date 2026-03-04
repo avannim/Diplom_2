@@ -5,6 +5,7 @@ public enum APIEndpoints {
     CREATE_USER("/auth/register"),
     ACTIONS_USER("/auth/user"),
     LOGIN_USER("/auth/login"),
+    LOGOUT_USER("/auth/logout"),
 
     //Order
     ACTIONS_ORDER("/orders"),

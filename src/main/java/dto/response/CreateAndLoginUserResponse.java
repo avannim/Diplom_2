@@ -9,7 +9,7 @@ import model.User;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateAndLoginUserResponse {
-    private String success;
+    private boolean success;
     private User user;
     private String accessToken;
     private String refreshToken;
