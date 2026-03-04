@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import dto.request.CreateUserRequest;
 import dto.response.CreateAndLoginUserResponse;
 import dto.response.GetAndChangeUserInfoResponse;
+import enums.APIEndpoints;
 import io.restassured.response.Response;
 import model.User;
 import org.junit.jupiter.api.AfterEach;
@@ -21,17 +22,15 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ChangeUserDataTest {
 
-    final static String createUserUri = "/auth/register";
-    final static String userUri = "/auth/user";
     private final Gson gson = new Gson();
     private final SendRequestStep sendRequestStep = new SendRequestStep();
     private final CheckSteps checkSteps = new CheckSteps();
-    private CreateUserRequest newUserRequest = new CreateUserRequest("email@emqil.ru", "Qwerty123@", "Тестовый юзер");
+    private final CreateUserRequest newUserRequest = new CreateUserRequest("email@emqil.ru", "Qwerty123@", "Тестовый юзер");
     private CreateAndLoginUserResponse userResponse;
 
     @BeforeEach
     void setUp() {
-        Response response = sendRequestStep.sendPostRequest(createUserUri, gson.toJson(newUserRequest));
+        Response response = sendRequestStep.sendPostRequest(APIEndpoints.CREATE_USER.getPath(), gson.toJson(newUserRequest));
         checkSteps.checkRequestStatus(response, 200);
         userResponse = gson.fromJson(response.body().asString(), CreateAndLoginUserResponse.class);
     }
@@ -40,7 +39,7 @@ public class ChangeUserDataTest {
     @MethodSource("userChangeData")
     @DisplayName("Проверка успешного изменения данных пользователя")
     public void checkChangeUserInfoWithAuthorizationTest(String body, User value, String errorMessage) {
-        Response response= sendRequestStep.sendPatchRequestWithAuthorization(userUri, body, userResponse.getAccessToken());
+        Response response= sendRequestStep.sendPatchRequestWithAuthorization(APIEndpoints.ACTIONS_USER.getPath(), body, userResponse.getAccessToken());
         checkSteps.checkRequestStatus(response, 200);
         GetAndChangeUserInfoResponse userInfoResponse = gson.fromJson(response.body().asString(), GetAndChangeUserInfoResponse.class);
         assertEquals(value, userInfoResponse.getUser(), errorMessage);
@@ -50,14 +49,14 @@ public class ChangeUserDataTest {
     @MethodSource("userChangeData")
     @DisplayName("Проверка изменения данных пользователя без авторизации")
     public void checkChangeUserInfoWithoutAuthorizationTest(String body) {
-        Response response= sendRequestStep.sendPatchRequest(userUri, body);
+        Response response= sendRequestStep.sendPatchRequest(APIEndpoints.ACTIONS_USER.getPath(), body);
         checkSteps.checkRequestStatus(response, 401);
         checkSteps.checkRequestErrorMessage("You should be authorised", response);
     }
 
     @AfterEach
     void tearDown() {
-        Response response = sendRequestStep.sendDeleteRequest(userUri, userResponse.getAccessToken());
+        Response response = sendRequestStep.sendDeleteRequest(APIEndpoints.ACTIONS_USER.getPath(), userResponse.getAccessToken());
         checkSteps.checkRequestStatus(response, 202);
     }
 
